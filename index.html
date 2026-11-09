@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#8E0B20">
+  <title>مبادرة اكتشف عُمان</title>
+  <meta name="description" content="لعبة جغرافية تعليمية تفاعلية لتعلم قراءة خريطة سلطنة عُمان: المحافظات والولايات والبحار والدول المجاورة.">
+  <meta property="og:title" content="مبادرة اكتشف عُمان">
+  <meta property="og:description" content="خمس ألعاب جغرافية تفاعلية على خريطة سلطنة عُمان - مدرسة زيد بن الخطاب 5-12">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="img/icon-180.png">
+  <link rel="preload" href="fonts/tajawal-arabic-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="brand">
+    <div class="brand-mark" aria-hidden="true"><img src="img/icon.svg" alt=""></div>
+    <div class="brand-text">
+      <h1>مبادرة اكتشف عُمان</h1>
+      <p>مدرسة زيد بن الخطاب 5-12</p>
+    </div>
+    <button id="soundBtn" class="sound-btn" type="button" aria-pressed="true" aria-label="إيقاف الأصوات" title="الأصوات">
+      <svg class="ico-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 8.5a4.5 4.5 0 0 1 0 7M18.5 6a8 8 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <svg class="ico-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 9.5l5 5M21.5 9.5l-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </header>
+
+  <nav class="games" aria-label="الألعاب">
+    <div class="games-track" role="tablist">
+      <button type="button" role="tab" data-game="puzzle"><span class="n">1</span>بازل المحافظات</button>
+      <button type="button" role="tab" data-game="wilayat"><span class="n">2</span>الولايات</button>
+      <button type="button" role="tab" data-game="seas"><span class="n">3</span>البحار والمحيطات</button>
+      <button type="button" role="tab" data-game="countries"><span class="n">4</span>الدول المجاورة</button>
+      <button type="button" role="tab" data-game="coloring"><span class="n">5</span>تلوين المحافظات</button>
+    </div>
+  </nav>
+
+  <main id="stage">
+    <section class="task" aria-live="polite">
+      <div class="task-main">
+        <h2 id="taskTitle"></h2>
+        <p id="taskText"></p>
+      </div>
+      <div class="task-side">
+        <div id="progress" class="progress" hidden>
+          <span id="progressText"></span>
+          <span class="bar"><i id="progressBar"></i></span>
+        </div>
+      </div>
+    </section>
+
+    <div class="board">
+      <div class="map-wrap" id="mapWrap">
+        <svg id="map" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="خريطة سلطنة عُمان"></svg>
+        <div class="zoom" aria-label="تكبير الخريطة">
+          <button type="button" data-zoom="in" aria-label="تكبير">+</button>
+          <button type="button" data-zoom="out" aria-label="تصغير">−</button>
+          <button type="button" data-zoom="reset" aria-label="عرض الخريطة كاملة">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+        <div id="compass" class="compass" hidden aria-hidden="true">
+          <svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="26" fill="#fff" stroke="#9aa4ae"/><path d="M40 12l6 28h-12z" fill="#C8102E"/><path d="M40 68l6-28h-12z" fill="#5b6573"/><text x="40" y="9" text-anchor="middle">ش</text><text x="40" y="79" text-anchor="middle">ج</text><text x="76" y="44" text-anchor="middle">شر</text><text x="5" y="44" text-anchor="middle">غ</text></svg>
+        </div>
+        <div id="toast" class="toast" role="status" aria-live="assertive"></div>
+      </div>
+      <aside class="tray" id="tray" aria-label="لوحة اللعب">
+        <div class="tray-ctl" id="trayCtl">
+          <div id="trayModes" class="tray-modes"></div>
+          <div id="levelBox" class="level-box">
+            <div id="levelCtl" class="seg" role="radiogroup" aria-label="المستوى">
+              <button type="button" role="radio" data-level="1">سهل</button>
+              <button type="button" role="radio" data-level="2">متوسط</button>
+              <button type="button" role="radio" data-level="3">متقدم</button>
+            </div>
+            <select id="levelSel" class="level-sel" aria-label="المستوى">
+              <option value="1">سهل</option>
+              <option value="2">متوسط</option>
+              <option value="3">متقدم</option>
+            </select>
+          </div>
+          <div id="taskActions" class="task-actions"></div>
+        </div>
+        <div class="tray-body" id="trayBody"></div>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="credits">تصميم: أ. أحمد الكلباني | مدير المدرسة: د. حمد الشهومي</footer>
+
+  <div id="modal" class="modal" hidden>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="seal" aria-hidden="true"><img src="img/icon.svg" alt=""></div>
+      <h2 id="modalTitle"></h2>
+      <p id="modalText"></p>
+      <div id="modalStars" class="stars" aria-hidden="true"></div>
+      <div id="modalActions" class="modal-actions"></div>
+    </div>
+  </div>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+
+  <noscript><div class="noscript"><b>اللعبة لا تعمل في نافذة المعاينة</b><span>يبدو أن الملف فُتح في معاينة لا تشغّل الألعاب (مثل معاينة الملفات في الواتساب أو تطبيق الملفات في الآيفون).</span><span>افتح رابط اللعبة في متصفح Safari أو Chrome، أو افتح الملف من متصفح الحاسوب.</span></div></noscript>
+
+  <script src="js/pointer-polyfill.js"></script>
+  <script src="js/tap.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/geo.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/drag.js"></script>
+  <script src="js/games/puzzle.js"></script>
+  <script src="js/games/wilayat.js"></script>
+  <script src="js/games/labelgame.js"></script>
+  <script src="js/games/seas.js"></script>
+  <script src="js/games/countries.js"></script>
+  <script src="js/games/coloring.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
