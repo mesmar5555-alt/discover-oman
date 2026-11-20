@@ -1,6 +1,6 @@
 /* حفظ نسخة من اللعبة على الجهاز: بعد أول زيارة تفتح اللعبة حتى دون إنترنت.
    عند تحديث الملفات على GitHub تصل النسخة الجديدة في الزيارة التالية. */
-var CACHE = 'discover-oman-v4';
+var CACHE = 'discover-oman-v5';
 var FILES = [
   './',
   'css/style.css',
