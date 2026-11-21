@@ -114,8 +114,8 @@
       var k = Math.min(1, (now - t0) / dur);
       var e = k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
       view = { x: from.x + (target.x - from.x) * e, y: from.y + (target.y - from.y) * e, w: from.w + (target.w - from.w) * e, h: from.h + (target.h - from.h) * e };
+      anim = k < 1 ? requestAnimationFrame(step) : null; // قبل الرسم: ليعرف المستمعون أن الحركة لم تنتهِ بعد
       applyView();
-      anim = k < 1 ? requestAnimationFrame(step) : null;
     })(t0);
   }
   function fitBox(b, pad, animate) {
@@ -322,6 +322,7 @@
     scale: scale, clientToMap: clientToMap, mapToClient: mapToClient, overMap: overMap,
     zsize: zsize, ztext: ztext, label: label, govLabel: govLabel,
     onTap: function (f) { tapHandler = f; }, onView: function (f) { viewListeners.push(f); },
+    animating: function () { return !!anim; },
     inGov: inGov, govAt: govAt, reset: reset,
     layer: function (cls) { return el('g', { class: cls || '' }, overlay); }
   };

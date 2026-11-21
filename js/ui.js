@@ -86,11 +86,16 @@
   function setActions(buttons) {
     var box = $('taskActions'); box.innerHTML = '';
     (buttons || []).forEach(function (b) {
-      var btn = h('button', { type: 'button', class: 'btn' + (b.cls ? ' ' + b.cls : ''), title: b.label, 'aria-label': b.aria || b.label }, [b.icon ? icon(b.icon) : null, h('span', { class: 'lbl', text: b.label })]);
+      /* short: اسم مختصر يظهر على الهاتف بدل الاسم الكامل (مثل «حبروت»)، ليُميَّز الزر عن زر بالأيقونة نفسها */
+      var btn = h('button', { type: 'button', class: 'btn' + (b.cls ? ' ' + b.cls : '') + (b.short ? ' has-short' : ''), title: b.label, 'aria-label': b.aria || b.label },
+        [b.icon ? icon(b.icon) : null, h('span', { class: 'lbl', text: b.label }), b.short ? h('span', { class: 'short', text: b.short }) : null]);
+      if (b.toggle) btn.setAttribute('aria-pressed', 'false');
       btn.addEventListener('click', function () { Sound.tap(); b.onClick(btn); });
       if (b.id) btn.id = b.id;
       box.appendChild(btn);
     });
+    // ثلاثة أزرار فأكثر: على الهاتف تأخذ أزرار المراحل سطرًا كاملًا حتى لا تضيق
+    var ctl = $('trayCtl'); if ((buttons || []).length >= 3) ctl.classList.add('wide'); else ctl.classList.remove('wide');
     syncCtl();
   }
 

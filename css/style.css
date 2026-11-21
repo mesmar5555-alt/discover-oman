@@ -140,7 +140,10 @@ button:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--focus)
 .progress { display: inline-flex; align-items: center; gap: 8px; font-weight: 800; font-size: .9rem; }
 .progress .bar { width: 84px; height: 8px; border-radius: 99px; background: var(--bg); overflow: hidden; }
 .progress .bar i { display: block; height: 100%; width: 0; background: var(--green); border-radius: inherit; transition: width .45s ease; }
-.task-actions { display: flex; gap: 6px; }
+.task-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+.task-actions .btn { white-space: nowrap; }
+.task-actions .btn .short { display: none; }
+.task-actions .btn[aria-pressed="true"] { background: var(--green-soft); border-color: var(--green); color: var(--green); }
 
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 6px;
@@ -452,6 +455,10 @@ body.is-dragging * { cursor: grabbing !important; }
   .level-sel { display: block; }
   .task-actions .btn { padding: 0; width: 38px; min-height: 38px; }
   .task-actions .btn .lbl { display: none; }
+  .task-actions .btn.has-short { width: auto; padding: 0 9px 0 7px; gap: 4px; }
+  .task-actions .btn.has-short .short { display: inline; font-size: .82rem; }
+  .tray-ctl.wide { flex-wrap: wrap; }
+  .tray-ctl.wide .tray-modes { flex: 1 1 100%; }
   .tray { padding: 6px; border-radius: 12px; max-height: 40vh; }
   .tray.row { flex-direction: row; align-items: stretch; }
   .tray.row .tray-ctl { flex-direction: column; flex-wrap: nowrap; justify-content: flex-start; flex: none; }

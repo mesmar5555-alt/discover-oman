@@ -21,11 +21,34 @@
       UI.compass(!!cfg.compass);
       UI.setLevel(S.level, function (lv) { S.level = lv; start(S.stage); });
       var acts = [{ label: 'إعادة المرحلة', icon: 'restart', onClick: function () { start(S.stage); } }];
-      if (cfg.lens) acts.unshift({ label: cfg.lens.label, icon: 'lens', onClick: function () { if (M.isZoomed()) M.resetView(true); else M.fitBox(cfg.lens.box, 0.04); } });
+      /* العدسات: تكبير على منطقة صغيرة. العدسة قد تخص مراحل معينة (stages) أو تختفي في المستوى المتقدم (maxLevel) */
+      S.lensOn = null;
+      var lenses = lensesNow(), many = lenses.length > 1; // الاسم المختصر على الهاتف فقط حين تتعدد العدسات
+      lenses.slice().reverse().forEach(function (ln) {
+        acts.unshift({ label: ln.label, short: many ? ln.short : null, icon: 'lens', cls: 'lens-btn', toggle: true, onClick: function () { toggleLens(ln); } });
+      });
       UI.setActions(acts);
+      M.onView(function () { if (S.lensOn && !M.isZoomed() && !M.animating()) { S.lensOn = null; markLens(); } });
       UI.setModes(stageSwitch());
       var st = stage();
       if (st.type === 'mc') startMC(st); else startLabels(st);
+    }
+
+    function lensesNow() {
+      return (cfg.lenses || (cfg.lens ? [cfg.lens] : [])).filter(function (ln) {
+        return (!ln.stages || ln.stages.indexOf(S.stage) >= 0) && (!ln.maxLevel || S.level <= ln.maxLevel);
+      });
+    }
+    function toggleLens(ln) {
+      if (S.lensOn === ln && M.isZoomed()) { S.lensOn = null; M.resetView(true); }
+      else { S.lensOn = ln; M.fitBox(ln.box, 0.04); }
+      markLens();
+    }
+    function markLens() {
+      var on = S.lensOn ? S.lensOn.label : '';
+      Array.prototype.forEach.call(document.querySelectorAll('#taskActions .lens-btn'), function (b) {
+        b.setAttribute('aria-pressed', String(b.getAttribute('aria-label') === on));
+      });
     }
 
     function stageSwitch() {
@@ -79,7 +102,7 @@
       Object.keys(S.slotGeo).forEach(function (k) {
         var sg = S.slotGeo[k], it = sg.it;
         if (it.ring) {
-          sg.rpx = Math.min(Math.max(it.r * s, 17), 46);
+          sg.rpx = Math.min(Math.max(it.r * s, it.minPx || 17), 46);
           sg.rect.setAttribute('r', sg.rpx / s);
           if (sg.labelEl && it.side) placeRingLabel(sg, s);
           return;
